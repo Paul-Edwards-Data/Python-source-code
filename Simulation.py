@@ -5,12 +5,18 @@
 # The implementation incorporates standard machine learning workflows and
 # publicly available algorithmic logic (FedAvg, FedProx, Krum, and BadNets)
 # adapted from their respective original research publications.
-# All mathematical concepts and libraries utilized are credited to their
-# respective authors via inline citations throughout this document.
+# All mathematical concepts and libraries utilised are credited to their
+# respective authors.
+# References:
+# A. Yousefpour et al., "Opacus: User-friendly differential privacy in PyTorch", arXiv preprint arXiv:2109.12298, 2021.
+# Gu et al., "BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain", arXiv, 2017.
+# P. Blanchard, E. M. El Mhamdi, R. Guerraoui and J. Stainer, "Machine Learning with Adversaries: Byzantine Tolerant Gradient Descent", Advances in Neural Information Processing Systems, vol. 30, pp. 119-129, 2017.
+# Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, "Gradient-based learning applied to document recognition", Proceedings of the IEEE, vol. 86, no. 11, pp. 2278-2324, Nov. 1998.
+# A. Krizhevsky, "Learning multiple layers of features from tiny images",University of Toronto, Toronto, ON, Canada, Tech. Rep., 2009.
+# McMahan et al., "Communication-Efficient Learning of Deep Networks from Decentralized Data", Proceedings of the 20th International Conference on Artificial Intelligence and Statistics
+# M. Yurochkin et al., "A Bayesian nonparametric approach to federated learning", International Conference on Machine Learning (ICML), pp. 7252-7261, 2019.
 # ==============================================================================
 
-# Refeference: A. Yousefpour et al., "Opacus: User-friendly differential privacy in PyTorch,"
-# arXiv preprint arXiv:2109.12298, 2021.
 !pip install opacus
 
 import torch
@@ -94,8 +100,6 @@ class BasicCNN(nn.Module):
         return self.fc(self.conv(x).view(x.size(0), -1))
 
 # Adds poisoned data into the Dataset.
-# Reference: Gu et al., "BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain"
-# arXiv, 2017
 class PoisonDatasetMnist(Dataset):
     def __init__(self, dataset, rate, target=0, force_poison=False):
         self.dataset, self.rate, self.target, self.force_poison = dataset, rate, target, force_poison
@@ -166,10 +170,7 @@ def get_metrics(model, loader):
 
 def krum_aggregator(updates, faulty_count):
     """
-	# Reference: P. Blanchard, E. M. El Mhamdi, R. Guerraoui and J. Stainer,
-	# "Machine Learning with Adversaries: Byzantine Tolerant Gradient Descent"
-	# Advances in Neural Information Processing Systems, vol. 30, pp. 119-129, 2017
-    updates: List of state_dicts.
+	updates: List of state_dicts.
     faulty_count: Number of suspected Byzantine/poisoned clients (f).
     """
     # 1. Flatten all updates into vectors
@@ -232,15 +233,11 @@ def process_simulation(epsilon_value):
     full_simulation_results = []
 
     # Data Setup - MNIST.
-	# Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner, "Gradient-based learning applied to document recognition"
-    # Proceedings of the IEEE, vol. 86, no. 11, pp. 2278-2324, Nov. 1998
-    # transform = transforms.ToTensor()
+	# transform = transforms.ToTensor()
     # train_ds = datasets.MNIST('./data', train=True, download=True, transform=transform)
     # test_ds = datasets.MNIST('./data', train=False, download=True, transform=transform)
 	# Data Setup - CIFAR-10
-	# Reference: A. Krizhevsky, "Learning multiple layers of features from tiny images,"
-	# University of Toronto, Toronto, ON, Canada, Tech. Rep., 2009.
-    transform = transforms.ToTensor()
+	transform = transforms.ToTensor()
     train_ds = datasets.CIFAR10('./data', train=True, download=True, transform=transform)
     test_ds = datasets.CIFAR10('./data', train=False, download=True, transform=transform)
 
@@ -276,8 +273,6 @@ def process_simulation(epsilon_value):
     # epsilons = [0, 0.1, 0.5, 1, 2, 5, 10, 20]
     poison_rates = [0, 0.01, 0.05, 0.10, 0.20]
     # Pair FedAvg with mu value of 0 the standard value for federated averaging.
-	# Reference: McMahan et al., "Communication-Efficient Learning of Deep Networks from Decentralized Data"
-	# Proceedings of the 20th International Conference on Artificial Intelligence and Statistics
     # Pair FedProx with value of 0.5 to act as a regulariser preventing local model updates drifting too far from global.
     methods = [("FedAvg", 0.0), ("Krum", 0.0),("FedProx", 0.5)]
 
@@ -292,8 +287,6 @@ def process_simulation(epsilon_value):
             # It provides a way to model skewed distributions in a Non-IID setting for Federated Learning.
             # Splits a dataset among multiple clients so that each client gets a biased, realistic mix of data.
             # A low alpha like 0.5 creates high imbalance—some clients will get a lot of one class, while others get almost none.
-            # Reference: M. Yurochkin et al., "A Bayesian nonparametric approach to federated learning"
-			# International Conference on Machine Learning (ICML), 2019, pp. 7252-7261.
             alpha = 0.5
             n_classes = 10
             label_list = np.array(train_ds.targets)
@@ -494,7 +487,7 @@ if __name__ == "__main__":
     # Run each epsilon individually as estimated run time for entire array is excessive.
     # Final sweep at epsilon 0 will not use DP to give a baseline when poison rate is also 0.
     # epsilons = [0, 1, 2, 3, 5, 10, 20]
-    process_simulation(5)
+    process_simulation(20)
 
 	
 
