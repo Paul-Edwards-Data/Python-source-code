@@ -19,7 +19,7 @@ from scipy.stats import chi2
 
 # --- 1. Data Ingestion & Preprocessing ---
 # Load empirical simulation results matrix
-data_path = "/content/sample_data/MNIST.csv"
+data_path = "/content/sample_data/MNIST_Merged.csv"
 if not os.path.exists(data_path):
     # Fallback to local working directory if executing outside of original environment
     data_path = "MNIST.csv"
