@@ -3,7 +3,7 @@
 ATTRIBUTION & ACKNOWLEDGEMENT NOTICE
 Statistical Analysis Framework: Post-Simulation Privacy & Adversarial Attack Evaluation
 Author: Paul Edwards
-Note: This code was executed in Colab to make use of high-performance GPU's
+Note: This code was executed in Colab to make use of high-performance GPU's and some code is specific to the Colab environment
 References:
 - A. Yousefpour et al., "Opacus: User-friendly differential privacy in PyTorch", arXiv preprint arXiv:2109.12298, 2021.
 - Gu et al., "BadNets: Identifying Vulnerabilities in the Machine Learning Model Supply Chain", arXiv, 2017.
